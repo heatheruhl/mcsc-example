@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCSC Executive Support Board — Heather Uhl</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;1,300&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:       #1B2B4A;
+      --navy-mid:   #2D4270;
+      --red:        #C1272D;
+      --red-light:  #E04048;
+      --bg:         #EDF0F5;
+      --col-bg:     #DDE3EC;
+      --col-head:   #CDD5E2;
+      --card-bg:    #FFFFFF;
+      --text:       #1A2035;
+      --muted:      #6B7785;
+      --border:     #C4CDD9;
+      --shadow:     0 2px 6px rgba(27,43,74,0.10);
+      --shadow-up:  0 8px 22px rgba(27,43,74,0.22);
+      --in:         #6366F1;
+      --prog:       #F59E0B;
+      --wait:       #8B5CF6;
+      --done-c:     #10B981;
+    }
+
+    body {
+      font-family: 'IBM Plex Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    /* ── Header ─────────────────────────────────── */
+    .site-header {
+      background: var(--navy);
+      padding: 28px 40px 26px;
+      position: relative;
+      overflow: hidden;
+    }
+    .site-header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, transparent 55%, rgba(193,39,45,0.18));
+      pointer-events: none;
+    }
+    .header-inner {
+      max-width: 1360px;
+      margin: 0 auto;
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 24px;
+      position: relative;
+      z-index: 1;
+    }
+    .org-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: 0.13em;
+      text-transform: uppercase;
+      color: var(--red-light);
+      margin-bottom: 7px;
+    }
+    .board-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      color: #fff;
+      line-height: 1.2;
+    }
+    .board-subtitle {
+      margin-top: 5px;
+      font-size: 12.5px;
+      color: rgba(255,255,255,0.48);
+      font-weight: 300;
+      font-style: italic;
+    }
+    .ea-badge {
+      display: inline-block;
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 20px;
+      padding: 7px 18px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+      font-weight: 500;
+      white-space: nowrap;
+    }
+
+    /* ── Framing note ────────────────────────────── */
+    .framing-wrap {
+      max-width: 1360px;
+      margin: 22px auto 4px;
+      padding: 0 40px;
+    }
+    .framing-note {
+      background: #fff;
+      border-left: 3px solid var(--red);
+      border-radius: 0 6px 6px 0;
+      padding: 13px 18px;
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.65;
+      box-shadow: var(--shadow);
+    }
+    .framing-note strong { color: var(--navy); }
+
+    /* ── Board ───────────────────────────────────── */
+    .board {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 16px 40px 40px;
+    }
+    .drag-hint {
+      font-size: 11px;
+      color: var(--muted);
+      font-style: italic;
+      margin-bottom: 12px;
+      text-align: right;
+      letter-spacing: 0.02em;
+    }
+    .columns {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    /* ── Column ──────────────────────────────────── */
+    .column { border-radius: 10px; overflow: hidden; }
+    .col-header {
+      padding: 13px 16px;
+      background: var(--col-head);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 3px solid transparent;
+    }
+    .col-header.h-in   { border-color: var(--in); }
+    .col-header.h-prog { border-color: var(--prog); }
+    .col-header.h-wait { border-color: var(--wait); }
+    .col-header.h-done { border-color: var(--done-c); }
+
+    .col-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.09em;
+      text-transform: uppercase;
+      color: var(--navy);
+    }
+    .col-count {
+      background: var(--navy);
+      color: #fff;
+      border-radius: 10px;
+      padding: 2px 9px;
+      font-size: 11px;
+      font-weight: 600;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    .col-cards {
+      background: var(--col-bg);
+      padding: 10px;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      gap: 9px;
+      transition: background 0.15s;
+    }
+    .col-cards.drag-over { background: rgba(99,102,241,0.07); }
+
+    /* ── Card ────────────────────────────────────── */
+    .card {
+      background: var(--card-bg);
+      border-radius: 7px;
+      padding: 13px 13px 11px;
+      box-shadow: var(--shadow);
+      cursor: grab;
+      transition: box-shadow 0.18s, transform 0.15s, opacity 0.15s;
+      border: 1px solid rgba(0,0,0,0.04);
+      user-select: none;
+    }
+    .card:hover          { box-shadow: var(--shadow-up); transform: translateY(-1px); }
+    .card:active         { cursor: grabbing; }
+    .card.dragging       { opacity: 0.38; cursor: grabbing; }
+    .col-done .card      { opacity: 0.72; }
+
+    .card-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 9.5px;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+    .tag-p { background: #D1FAE5; color: #065F46; }
+    .tag-g { background: #EDE9FE; color: #4C1D95; }
+    .tag-c { background: #FEF3C7; color: #92400E; }
+    .tag-o { background: #DBEAFE; color: #1E40AF; }
+    .tag-e { background: #FCE7F3; color: #9D174D; }
+
+    .card-title {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 1.48;
+      color: var(--text);
+      margin-bottom: 9px;
+    }
+    .card-meta {
+      font-size: 10.5px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-hi  { background: var(--red); }
+    .dot-med { background: var(--prog); }
+    .dot-lo  { background: var(--done-c); }
+    .done-mark { color: var(--done-c); font-weight: 600; }
+
+    /* ── Footer ──────────────────────────────────── */
+    footer {
+      max-width: 1360px;
+      margin: 0 auto;
+      padding: 18px 40px 28px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 11.5px;
+      color: var(--muted);
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    footer a { color: var(--navy); text-decoration: none; font-weight: 500; }
+    footer a:hover { text-decoration: underline; }
+
+    /* ── Responsive ──────────────────────────────── */
+    @media (max-width: 960px) {
+      .columns { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 580px) {
+      .site-header, .board, footer, .framing-wrap { padding-left: 18px; padding-right: 18px; }
+      .columns { grid-template-columns: 1fr; }
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      .board-title { font-size: 22px; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div>
+      <div class="org-label">Missing Children Society of Canada</div>
+      <h1 class="board-title">Executive Support Board</h1>
+      <p class="board-subtitle">A working demonstration — how priorities become visible, trackable, and shared</p>
+    </div>
+    <div><span class="ea-badge">Prepared by Heather Uhl</span></div>
+  </div>
+</header>
+
+<div class="framing-wrap">
+  <div class="framing-note">
+    <strong>A note on this board:</strong> These cards reflect what I've come to understand of MCSC's current priorities from publicly available information. In practice, we'd build this together from day one — and it would evolve every week. The point isn't the specific cards. It's that nothing lives only in my head, and you'd always know exactly where things stand.
+  </div>
+</div>
+
+<main class="board">
+  <p class="drag-hint">↔ Drag cards between columns to update status</p>
+  <div class="columns">
+
+    <!-- INCOMING -->
+    <div class="column">
+      <div class="col-header h-in">
+        <span class="col-title">Incoming</span>
+        <span class="col-count" id="cnt-in">3</span>
+      </div>
+      <div class="col-cards" id="col-in" ondragover="ov(event)" ondrop="dp(event,'in')" ondragleave="ol(event)">
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-e">🎂 Milestone</div>
+          <div class="card-title">40th anniversary: planning meeting & initial ideas draft</div>
+          <div class="card-meta"><span class="dot dot-hi"></span> High priority · 2026</div>
+        </div>
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-c">📣 Communications</div>
+          <div class="card-title">Missing Children's Month (May 1): remarks and content calendar needed in weeks</div>
+          <div class="card-meta"><span class="dot dot-hi"></span> Urgent · Due mid-April</div>
+        </div>
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-g">📋 Board &amp; Governance</div>
+          <div class="card-title">Q2 board meeting: confirm date and begin pulling package together</div>
+          <div class="card-meta"><span class="dot dot-med"></span> Medium · Date TBC</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- IN PROGRESS -->
+    <div class="column">
+      <div class="col-header h-prog">
+        <span class="col-title">In Progress</span>
+        <span class="col-count" id="cnt-prog">3</span>
+      </div>
+      <div class="col-cards" id="col-prog" ondragover="ov(event)" ondrop="dp(event,'prog')" ondragleave="ol(event)">
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-c">📣 Communications</div>
+          <div class="card-title">Missing Children's Month: content calendar drafting and post scheduling</div>
+          <div class="card-meta"><span class="dot dot-hi"></span> High priority · Due Apr 1</div>
+        </div>
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-e">📅 Events</div>
+          <div class="card-title">Stampede Parade: coordinating participation with Calgary Police Association — July 4</div>
+          <div class="card-meta"><span class="dot dot-med"></span> Medium · July 4</div>
+        </div>
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-p">🤝 Partnership</div>
+          <div class="card-title">WestJet: annual partnership touchpoint and renewal prep underway</div>
+          <div class="card-meta"><span class="dot dot-hi"></span> High priority</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- WAITING ON -->
+    <div class="column">
+      <div class="col-header h-wait">
+        <span class="col-title">Waiting On</span>
+        <span class="col-count" id="cnt-wait">3</span>
+      </div>
+      <div class="col-cards" id="col-wait" ondragover="ov(event)" ondrop="dp(event,'wait')" ondragleave="ol(event)">
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-e">🎂 Milestone</div>
+          <div class="card-title">40th anniversary tribute: awaiting production contact — nudged Mar 20</div>
+          <div class="card-meta"><span class="dot dot-med"></span> 8 days · Follow up Apr 1</div>
+        </div>
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-g">📋 Board &amp; Governance</div>
+          <div class="card-title">Q2 board meeting: awaiting board member availability</div>
+          <div class="card-meta"><span class="dot dot-med"></span> Requested Mar 21 · 7 days</div>
+        </div>
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-p">🤝 Partnership</div>
+          <div class="card-title">OPP joint awareness initiative: followed up Mar 15, awaiting response</div>
+          <div class="card-meta"><span class="dot dot-lo"></span> 13 days · Follow up Apr 1</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- DONE -->
+    <div class="column col-done">
+      <div class="col-header h-done">
+        <span class="col-title">Done ✓</span>
+        <span class="col-count" id="cnt-done">3</span>
+      </div>
+      <div class="col-cards" id="col-done" ondragover="ov(event)" ondrop="dp(event,'done')" ondragleave="ol(event)">
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-c">📣 Communications</div>
+          <div class="card-title">Runaway Prevention Month press release — published November 2025</div>
+          <div class="card-meta"><span class="done-mark">✓ Complete</span></div>
+        </div>
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-p">🤝 Partnership</div>
+          <div class="card-title">First Nations Telehealth webinar — delivered November 26, 2025</div>
+          <div class="card-meta"><span class="done-mark">✓ Complete</span></div>
+        </div>
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-p">🤝 Partnership</div>
+          <div class="card-title">WestJet Q1 partnership impact report — submitted on time</div>
+          <div class="card-meta"><span class="done-mark">✓ Complete</span></div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  <div>Heather Uhl &nbsp;·&nbsp; <a href="mailto:heather.uhl@moretimeinaday.com">heather.uhl@moretimeinaday.com</a> &nbsp;·&nbsp; (403) 870-6797</div>
+  <div>View interactive version: <a href="#" id="live-link">[your-github-pages-url]</a></div>
+</footer>
+
+<script>
+  let dragged = null;
+
+  function ds(e) {
+    dragged = e.target.closest('.card');
+    setTimeout(() => dragged && dragged.classList.add('dragging'), 0);
+    e.dataTransfer.effectAllowed = 'move';
+  }
+  function ov(e) {
+    e.preventDefault();
+    e.currentTarget.classList.add('drag-over');
+  }
+  function ol(e) {
+    e.currentTarget.classList.remove('drag-over');
+  }
+  function dp(e, colId) {
+    e.preventDefault();
+    e.currentTarget.classList.remove('drag-over');
+    if (!dragged) return;
+    document.getElementById('col-' + colId).appendChild(dragged);
+    dragged.classList.remove('dragging');
+    dragged = null;
+    updateCounts();
+  }
+  document.addEventListener('dragend', () => {
+    if (dragged) dragged.classList.remove('dragging');
+  });
+
+  function updateCounts() {
+    [['in','cnt-in'],['prog','cnt-prog'],['wait','cnt-wait'],['done','cnt-done']].forEach(([c, k]) => {
+      document.getElementById(k).textContent =
+        document.getElementById('col-' + c).querySelectorAll('.card').length;
+    });
+  }
+</script>
+</body>
+</html>
