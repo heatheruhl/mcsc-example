@@ -208,6 +208,9 @@
     .tag-c { background: #FEF3C7; color: #92400E; }
     .tag-o { background: #DBEAFE; color: #1E40AF; }
     .tag-e { background: #FCE7F3; color: #9D174D; }
+    .tag-f { background: #FFF7ED; color: #9A3412; }
+    .tag-m { background: #F0FDF4; color: #166534; }
+    .tag-s { background: #FEF2F2; color: #991B1B; }
 
     .card-title {
       font-size: 13px;
@@ -289,26 +292,32 @@
     <div class="column">
       <div class="col-header h-in">
         <span class="col-title">Incoming</span>
-        <span class="col-count" id="cnt-in">3</span>
+        <span class="col-count" id="cnt-in">4</span>
       </div>
       <div class="col-cards" id="col-in" ondragover="ov(event)" ondrop="dp(event,'in')" ondragleave="ol(event)">
 
         <div class="card" draggable="true" ondragstart="ds(event)">
-          <div class="card-tag tag-e">🎂 Milestone</div>
-          <div class="card-title">40th anniversary: planning meeting & initial ideas draft</div>
-          <div class="card-meta"><span class="dot dot-hi"></span> High priority · 2026</div>
+          <div class="card-tag tag-c">📣 Communications</div>
+          <div class="card-title">Missing Children's Month (May 1): draft CEO remarks for launch</div>
+          <div class="card-meta"><span class="dot dot-hi"></span> Urgent · Due mid-April</div>
         </div>
 
         <div class="card" draggable="true" ondragstart="ds(event)">
-          <div class="card-tag tag-c">📣 Communications</div>
-          <div class="card-title">Missing Children's Month (May 1): remarks and content calendar needed in weeks</div>
-          <div class="card-meta"><span class="dot dot-hi"></span> Urgent · Due mid-April</div>
+          <div class="card-tag tag-p">🤝 Partnership</div>
+          <div class="card-title">New police service inquiry: assess fit for Child Search Network onboarding</div>
+          <div class="card-meta"><span class="dot dot-med"></span> Medium · Received Mar 24</div>
         </div>
 
         <div class="card" draggable="true" ondragstart="ds(event)">
           <div class="card-tag tag-g">📋 Board &amp; Governance</div>
           <div class="card-title">Q2 board meeting: confirm date and begin pulling package together</div>
           <div class="card-meta"><span class="dot dot-med"></span> Medium · Date TBC</div>
+        </div>
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-f">💛 Fundraising</div>
+          <div class="card-title">40th anniversary fundraising angle: identify campaign hook and donor outreach list</div>
+          <div class="card-meta"><span class="dot dot-med"></span> Medium · Tied to anniversary planning</div>
         </div>
 
       </div>
@@ -318,7 +327,7 @@
     <div class="column">
       <div class="col-header h-prog">
         <span class="col-title">In Progress</span>
-        <span class="col-count" id="cnt-prog">3</span>
+        <span class="col-count" id="cnt-prog">4</span>
       </div>
       <div class="col-cards" id="col-prog" ondragover="ov(event)" ondrop="dp(event,'prog')" ondragleave="ol(event)">
 
@@ -329,15 +338,21 @@
         </div>
 
         <div class="card" draggable="true" ondragstart="ds(event)">
-          <div class="card-tag tag-e">📅 Events</div>
-          <div class="card-title">Stampede Parade: coordinating participation with Calgary Police Association — July 4</div>
-          <div class="card-meta"><span class="dot dot-med"></span> Medium · July 4</div>
+          <div class="card-tag tag-m">📰 Media</div>
+          <div class="card-title">Missing Children's Month: coordinate media outreach and interview prep for CEO</div>
+          <div class="card-meta"><span class="dot dot-hi"></span> High priority · May 1 deadline</div>
         </div>
 
         <div class="card" draggable="true" ondragstart="ds(event)">
           <div class="card-tag tag-p">🤝 Partnership</div>
           <div class="card-title">WestJet: annual partnership touchpoint and renewal prep underway</div>
           <div class="card-meta"><span class="dot dot-hi"></span> High priority</div>
+        </div>
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-e">📅 Events</div>
+          <div class="card-title">Stampede Parade: coordinating participation with Calgary Police Association — July 4</div>
+          <div class="card-meta"><span class="dot dot-med"></span> Medium · July 4</div>
         </div>
 
       </div>
@@ -347,13 +362,19 @@
     <div class="column">
       <div class="col-header h-wait">
         <span class="col-title">Waiting On</span>
-        <span class="col-count" id="cnt-wait">3</span>
+        <span class="col-count" id="cnt-wait">4</span>
       </div>
       <div class="col-cards" id="col-wait" ondragover="ov(event)" ondrop="dp(event,'wait')" ondragleave="ol(event)">
 
         <div class="card" draggable="true" ondragstart="ds(event)">
-          <div class="card-tag tag-e">🎂 Milestone</div>
-          <div class="card-title">40th anniversary tribute: awaiting production contact — nudged Mar 20</div>
+          <div class="card-tag tag-s">👨‍👩‍👧 Family Support</div>
+          <div class="card-title">Active case family: follow-up call with investigator re: case update — pending report</div>
+          <div class="card-meta"><span class="dot dot-hi"></span> Sensitive · Handle with care</div>
+        </div>
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-e">📅 Events</div>
+          <div class="card-title">40th anniversary video tribute: awaiting production contact — nudged Mar 20</div>
           <div class="card-meta"><span class="dot dot-med"></span> 8 days · Follow up Apr 1</div>
         </div>
 
@@ -376,9 +397,15 @@
     <div class="column col-done">
       <div class="col-header h-done">
         <span class="col-title">Done ✓</span>
-        <span class="col-count" id="cnt-done">3</span>
+        <span class="col-count" id="cnt-done">4</span>
       </div>
       <div class="col-cards" id="col-done" ondragover="ov(event)" ondrop="dp(event,'done')" ondragleave="ol(event)">
+
+        <div class="card" draggable="true" ondragstart="ds(event)">
+          <div class="card-tag tag-p">🤝 Partnership</div>
+          <div class="card-title">First Nations Telehealth webinar — delivered November 26, 2025</div>
+          <div class="card-meta"><span class="done-mark">✓ Complete</span></div>
+        </div>
 
         <div class="card" draggable="true" ondragstart="ds(event)">
           <div class="card-tag tag-c">📣 Communications</div>
@@ -387,8 +414,8 @@
         </div>
 
         <div class="card" draggable="true" ondragstart="ds(event)">
-          <div class="card-tag tag-p">🤝 Partnership</div>
-          <div class="card-title">First Nations Telehealth webinar — delivered November 26, 2025</div>
+          <div class="card-tag tag-m">📰 Media</div>
+          <div class="card-title">Nicole Morin 40th anniversary — media coordination with Toronto Police complete</div>
           <div class="card-meta"><span class="done-mark">✓ Complete</span></div>
         </div>
 
@@ -405,8 +432,7 @@
 </main>
 
 <footer>
-  <div>Heather Uhl &nbsp;·&nbsp; <a href="mailto:heather.uhl@moretimeinaday.com">heather.uhl@moretimeinaday.com</a> &nbsp;·&nbsp; (403) 870-6797</div>
-  <div>View interactive version: <a href="#" id="live-link">[your-github-pages-url]</a></div>
+  <div>Heather Uhl &nbsp;·&nbsp; <a href="mailto:heatheruhl@gmail.com">heatheruhl@gmail.com</a> &nbsp;·&nbsp; (403) 870-6797 &nbsp;·&nbsp; <a href="https://www.linkedin.com/in/heatheruhl/" target="_blank">linkedin.com/in/heatheruhl</a></div>
 </footer>
 
 <script>
